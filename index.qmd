@@ -13,3 +13,61 @@ owid_energy <- readr::read_csv('https://raw.githubusercontent.com/rfordatascienc
 
 ```
 
+## Visualization 1
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(scales)
+
+#Preparing data
+vis01 <- owid_energy %>%
+  filter(year == 2018, country != "World") %>%    
+  filter(!is.na(gdp), !is.na(population), !is.na(renewables_share_energy)) %>% 
+  mutate(
+    gdp_per_capita = gdp / population             
+  )
+
+#Creating plot
+ggplot(vis01, aes(
+  x = gdp_per_capita, 
+  y = renewables_share_energy, 
+  size = population,
+  color = renewables_share_energy
+  )) +
+geom_point(alpha = 0.7) +
+geom_text_repel(
+  data = filter(vis01, country == "United States"),
+  aes(label = country),
+  color = "black",
+  size = 3.5,
+  nudge_y = 5,
+  nudge_x = 0.3, 
+  segment.color = "gray60",
+  segment.size = 0.3
+)+
+scale_x_log10(labels = label_dollar()) +
+scale_y_continuous(labels = label_percent(scale = 1, accuracy = 1)) +
+scale_color_gradient(
+  low = "red", 
+  high = "darkgreen",
+  labels = label_percent(scale = 1,),
+  name = "Renewables share"
+)+
+scale_size_continuous(
+  name = "Population",
+  labels = label_number(big.mark = ",", accuracy = 1)
+)+
+labs(
+  title = "Renewable Energy vs. GDP per Capita (2018)",
+  subtitle = "Each point represents a country",
+  caption = "Source: Our World in Data, Energy Data Explorer, via TidyTuesday",
+  x = "GDP per Capita (USD)",
+  y = "Share of primary energy from renewables"
+)
+```
+  
+  
+  
+  
+  
