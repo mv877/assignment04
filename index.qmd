@@ -1,5 +1,6 @@
 ---
-title: "index.qmd"
+title: "Assignment 4"
+subtitle: "Data Source: https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-06/owid-energy.csv"
 format: html
 author: "Miguel Villa and Drew Ambrogi"
 execute:
@@ -75,13 +76,17 @@ us |>
 
 ## Visualization 2
 
+This visualization shows the relationship between countries’ GDP per capita and the share of their primary energy that comes from renewable sources in 2018 (the most recent year available in our dataset). Population and trade status are also represented for additional context. The visualization demonstrates no obvious, direct relationship between wealthier countries and clean-energy adoption. Several wealthier countries utilize an extremely small amount of renewable sources, while others achieve significant renewable utilization. The wide spread among middle-income nations suggests that economic growth alone does not determine clean-energy adoption and that policy priorities, natural resources, and infrastructure investment likely play major roles.
+
+
 ```{r}
 #Preparing data
 vis01 <- owid_energy %>%
   filter(year == 2018, country != "World") %>%    
   filter(!is.na(gdp), !is.na(population), !is.na(renewables_share_energy)) %>% 
   mutate(
-    gdp_per_capita = gdp / population             
+    gdp_per_capita = gdp / population,
+    trade_status = if_else(net_elec_imports_share_demand > 0, "Net importer", "Net exporter")
   )
 
 #Creating plot
@@ -89,7 +94,8 @@ ggplot(vis01, aes(
   x = gdp_per_capita, 
   y = renewables_share_energy, 
   size = population,
-  color = renewables_share_energy
+  color = renewables_share_energy,
+  shape = trade_status
   )) +
 geom_point(alpha = 0.7) +
 geom_text_repel(
@@ -99,7 +105,7 @@ geom_text_repel(
   size = 3.5,
   nudge_y = 5,
   nudge_x = 0.3, 
-  segment.color = "gray60",
+  segment.color = "black",
   segment.size = 0.3
 )+
 scale_x_log10(labels = label_dollar()) +
@@ -114,13 +120,21 @@ scale_size_continuous(
   name = "Population",
   labels = label_number(big.mark = ",", accuracy = 1)
 )+
+
+scale_shape(
+  name = "Trade Status"
+)+
 labs(
   title = "Renewable Energy vs. GDP per Capita (2018)",
-  subtitle = "Each point represents a country",
+  subtitle = "Each point represents an individual country.",
   caption = "Source: Our World in Data, Energy Data Explorer, via TidyTuesday",
   x = "GDP per Capita (USD)",
   y = "Share of primary energy from renewables"
-)
+) + 
+  theme_minimal() +
+  theme(
+    plot.caption.position = "plot",
+    plot.caption = element_text(hjust = 1))
 ```
 
 ## Visualization 3
@@ -188,6 +202,8 @@ ggplot(a, aes(x = `Countries`, y = share, fill = `Countries`)) +
 
 ## Visualization 4
 
+In the final visualization we examine energy independence, tracking net electricity import dependence among G7 countries from 2000 to the most recent year data was available. 
+
 ```{r}
 
 g7_countries <- c("United States", "Canada", "United Kingdom",
@@ -203,7 +219,8 @@ vis02 <- owid_energy %>%
 ggplot(vis02, aes(
   year,
   net_elec_imports_share_demand,
-  color = country)
+  color = country
+  )
 ) +
   geom_line(linewidth = 1) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
@@ -213,11 +230,15 @@ ggplot(vis02, aes(
   ) +
   labs(
     title = "Electricity Import Dependence Over Time (G7 Countries)",
-    subtitle = "Positive = net importer, Negative = net exporter",
+    subtitle = "Positive values show net importers, Negative values show net exporters",
     y = "Net electricity imports as share of demand",
     x = "Year",
-    caption = "Source: "
+    caption = "Source: Our World in Data, Energy Data Explorer, via TidyTuesday "
   ) +
-  theme_minimal()
+  theme_minimal() +
+  theme(
+    plot.subtitle = element_text(size = 10),
+    plot.caption.position = "plot",
+    plot.caption = element_text(hjust = 1))
 
 ```
