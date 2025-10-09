@@ -76,7 +76,7 @@ us |>
 
 ## Visualization 2
 
-This visualization shows the relationship between countries’ GDP per capita and the share of their primary energy that comes from renewable sources in 2018 (the most recent year available in our dataset). Population and trade status are also represented for additional context. The visualization demonstrates no obvious, direct relationship between wealthier countries and clean-energy adoption. Several wealthier countries utilize an extremely small amount of renewable sources, while others achieve significant renewable utilization. The wide spread among middle-income nations suggests that economic growth alone does not determine clean-energy adoption and that policy priorities, natural resources, and infrastructure investment likely play major roles.
+This visualization shows the relationship between countries’ GDP per capita and the share of their primary energy that comes from renewable sources in 2018 (the most recent year available in our dataset). Population and electricity trade status are also represented for additional context. The visualization demonstrates no obvious, direct relationship between wealthier countries and clean-energy adoption. Several wealthier countries utilize an extremely small amount of renewable sources, while others achieve significant renewable utilization. The wide spread among middle-income nations suggests that economic growth alone does not determine clean-energy adoption and that policy priorities, natural resources, and infrastructure investment likely play major roles.
 
 
 ```{r}
@@ -202,7 +202,7 @@ ggplot(a, aes(x = `Countries`, y = share, fill = `Countries`)) +
 
 ## Visualization 4
 
-In the final visualization we examine energy independence, tracking net electricity import dependence among G7 countries from 2000 to the most recent year data was available. 
+In the final visualization we examine net electricity import dependence among G7 countries from 2000 to the most recent year data was available. Many countries remained consistent during this period, with Italy as a significant importer, Canada as a consistent exporter, and Japan showing near-zero electricity trade due to its isolated grid. France and Germany are notable in that they moved in opposite directions, with France transitioning from a major exporter to a net importer, while Germany shifted from an importer to an exporter. Their divergent paths reflect how national energy strategies have reshaped each country’s role in Europe’s energy system. France’s move to net importer status stems from declining nuclear output due to aging reactors, while Germany’s expansion of renewables and grid integration has turned it into a net exporter.
 
 ```{r}
 
