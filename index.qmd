@@ -5,15 +5,23 @@ editor: Miguel Villa and Drew Ambrogi
 ---
 
 ## Opening Dataset
-From the Tidy Tuesday Series: Energy, Our World in Data. 
+
+From the Tidy Tuesday Series: Energy, Our World in Data.
+
 ```{r}
 # Opening Dataset
 install.packages("tidytuesdayR")
 owid_energy <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-06/owid-energy.csv')
-
+library(tidyverse)
+library(ggplot2)
+library(scales)
+library(dplyr)
+library(ggrepel)
 ```
 
 ## Visualization 1
+
+Over the past two decades, climate change has evolved into a central policy debate, prompting major legislative efforts such as the American Recovery and Reinvestment Act (2009). Yet the effectiveness of these actions in reducing U.S. reliance on fossil fuels remains questionable. As shown in the graph, the five dominant sources of energy production (coal, gas, hydro, nuclear, and oil) have persisted. While natural gas has significantly displaced coal, even amid regulatory rollbacks like that of the Clean Power Plan, this shift has not translated into substantial growth in renewable energy. By 2018, oil remained the leading source of energy in the United States, with natural gas and coal continuing to play significant roles.
 
 ```{r}
 # Preparing Data
@@ -53,24 +61,17 @@ us |>
   ) +
   labs(
     title = "Trends in U.S. Energy Production by Source (2000–2018)",
-    subtitle = "Share of total energy production by source over time",
+    subtitle = "5 Largest Sources of Energy: Share of Total Production",
     x = "Year",
     y = "Share of Total U.S. Energy Production",
     caption = "Source: Our World in Data, Energy Data Explorer, via TidyTuesday") +
   theme_minimal() 
+
 ```
 
 ## Visualization 2
 
 ```{r}
-library(tidyverse)
-library(ggplot2)
-library(scales)
-library(dplyr)
-library(ggrepel)
-
-
-
 #Preparing data
 vis01 <- owid_energy %>%
   filter(year == 2018, country != "World") %>%    
@@ -117,8 +118,10 @@ labs(
   y = "Share of primary energy from renewables"
 )
 ```
-  
+
 ## Visualization 3
+
+As shown in the previous graph, the United States occupies a middle ground in its reliance on renewable energy sources. When comparing broader income categories of nations (high, upper-middle, and lower-middle) a few patterns emerge. High-income nations tend to rely less on coal, yet exhibit a notably higher dependence on oil. In contrast, shares of natural gas and renewables appear relatively consistent across income groups. The prominence of oil in both the U.S. and other high-income countries raises important concerns about energy independence and vulnerability to price volatility, especially in the absence of a more diversified energy portfolio.
 
 ```{r}
 # Preparing Data 
@@ -178,4 +181,3 @@ ggplot(a, aes(x = `Countries`, y = share, fill = `Countries`)) +
     legend.position = "bottom"
   )
 ```
-  
