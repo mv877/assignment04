@@ -1,7 +1,9 @@
 ---
 title: "Assignment 4"
 subtitle: "Data Source: https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-06/owid-energy.csv"
-format: html
+format:
+  html:
+    embed-resources: true
 author: "Miguel Villa and Drew Ambrogi"
 execute:
   warning: false
