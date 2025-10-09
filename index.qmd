@@ -185,3 +185,39 @@ ggplot(a, aes(x = `Countries`, y = share, fill = `Countries`)) +
     legend.position = "bottom"
   )
 ```
+
+## Visualization 4
+
+```{r}
+
+g7_countries <- c("United States", "Canada", "United Kingdom",
+                  "France", "Germany", "Italy", "Japan")
+
+vis02 <- owid_energy %>%
+  filter(
+    country %in% g7_countries,
+    !is.na(net_elec_imports_share_demand),
+    year >= 2000
+  )
+
+ggplot(vis02, aes(
+  year,
+  net_elec_imports_share_demand,
+  color = country)
+) +
+  geom_line(linewidth = 1) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  scale_y_continuous(
+    labels = label_percent(scale = 1),
+    name = "Net electricity imports as share of demand"
+  ) +
+  labs(
+    title = "Electricity Import Dependence Over Time (G7 Countries)",
+    subtitle = "Positive = net importer, Negative = net exporter",
+    y = "Net electricity imports as share of demand",
+    x = "Year",
+    caption = "Source: "
+  ) +
+  theme_minimal()
+
+```
