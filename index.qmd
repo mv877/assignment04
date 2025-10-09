@@ -16,9 +16,60 @@ owid_energy <- readr::read_csv('https://raw.githubusercontent.com/rfordatascienc
 ## Visualization 1
 
 ```{r}
+# Preparing Data
+us <- owid_energy |>
+  filter(country == "United States") |>
+  pivot_longer(
+    cols = c(gas_share_energy,
+             hydro_share_energy,
+             nuclear_share_energy,
+             coal_share_energy,
+             oil_share_energy),
+    names_to = "energy_source",
+    values_to = "share") |>
+  drop_na() 
+
+# Creating Plot
+us |>
+  ggplot(aes(x = year, y = share, color = energy_source)) +
+  geom_smooth(linewidth = 1) +
+  geom_point() +
+  scale_color_manual(
+    values = c(
+      coal_share_energy = "red",   
+      gas_share_energy = "darkorange",
+      oil_share_energy = "brown",
+      hydro_share_energy = "lightblue", 
+      nuclear_share_energy = "blue"
+    ),
+    labels = c(
+      coal_share_energy = "Coal",
+      gas_share_energy = "Gas",
+      oil_share_energy = "Oil",
+      hydro_share_energy = "Hydro",
+      nuclear_share_energy = "Nuclear"
+    ),
+    name = "Energy Source"
+  ) +
+  labs(
+    title = "Trends in U.S. Energy Production by Source (2000–2018)",
+    subtitle = "Share of total energy production by source over time",
+    x = "Year",
+    y = "Share of Total U.S. Energy Production",
+    caption = "Source: Our World in Data, Energy Data Explorer, via TidyTuesday") +
+  theme_minimal() 
+```
+
+## Visualization 2
+
+```{r}
 library(tidyverse)
 library(ggplot2)
 library(scales)
+library(dplyr)
+library(ggrepel)
+
+
 
 #Preparing data
 vis01 <- owid_energy %>%
@@ -67,53 +118,6 @@ labs(
 )
 ```
   
-## Visualization 2
-
-```{r}
-# Preparing Data
-us <- owid_energy |>
-  filter(country == "United States") |>
-  pivot_longer(
-    cols = c(gas_share_energy,
-             hydro_share_energy,
-             nuclear_share_energy,
-             coal_share_energy,
-             oil_share_energy),
-    names_to = "energy_source",
-    values_to = "share") |>
-  drop_na() 
-
-# Creating Plot
-us |>
-  ggplot(aes(x = year, y = share, color = energy_source)) +
-  geom_smooth(linewidth = 1) +
-  geom_point() +
-  scale_color_manual(
-    values = c(
-      coal_share_energy = "red",   
-      gas_share_energy = "darkorange",
-      oil_share_energy = "brown",
-      hydro_share_energy = "lightblue", 
-      nuclear_share_energy = "blue"
-    ),
-    labels = c(
-      coal_share_energy = "Coal",
-      gas_share_energy = "Gas",
-      oil_share_energy = "Oil",
-      hydro_share_energy = "Hydro",
-      nuclear_share_energy = "Nuclear"
-    ),
-    name = "Energy Source"
-  ) +
-  labs(
-    title = "Trends in U.S. Energy Production by Source (2000–2018)",
-    subtitle = "Share of total energy production by source over time",
-    x = "Year",
-    y = "Share of Total U.S. Energy Production",
-    caption = "Source: Our World in Data, Energy Data Explorer, via TidyTuesday") +
-  theme_minimal() 
-```
-  
 ## Visualization 3
 
 ```{r}
@@ -157,7 +161,7 @@ ggplot(a, aes(x = `Countries`, y = share, fill = `Countries`)) +
       oil_share_energy = "Oil"),
     ncol = 1, scales = "fixed")) +
   labs(
-    title = "Energy Source Share for Different Income Countries",
+    title = "Energy Source Share for Different Income Countries in 2018",
     subtitle = "Lower-Middle, Upper-Middle, and High Income Countries",
     x = "Energy Source",
     y = "Share of Energy (%)",
