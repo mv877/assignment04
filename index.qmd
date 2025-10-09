@@ -114,5 +114,64 @@ us |>
   theme_minimal() 
 ```
   
-  
+## Visualization 3
+
+```{r}
+# Preparing Data 
+a <- owid_energy |>
+  filter(country %in% c("Low-income countries",
+                        "Lower-middle-income countries",
+                        "Upper-middle-income countries",
+                        "High-income countries")) |>
+  pivot_longer(
+    cols = c(gas_share_energy,
+             hydro_share_energy,
+             nuclear_share_energy,
+             coal_share_energy,
+             oil_share_energy),
+    names_to = "energy_source",
+    values_to = "share"
+  ) |>
+  filter(!is.na(population), !is.na(share)) |>
+  filter(year == 2018) |>
+  mutate(country = recode(country,
+                          "High-income countries" = "High",
+                          "Upper-middle-income countries" = "Upper-Middle",
+                          "Lower-middle-income countries" = "Lower-Middle")) |>
+  rename(
+    `Countries` = country,
+    `Energy Source` = energy_source) 
+
+# Creating Plot
+ggplot(a, aes(x = `Countries`, y = share, fill = `Countries`)) +
+  geom_col(width = 0.4) +
+  geom_text(aes(label = paste0(round(share, 0), "%")),
+            vjust = 0,
+            size = 2.5) +    
+  facet_wrap(~ `Energy Source`, labeller = labeller(
+    `Energy Source` = c(
+      coal_share_energy = "Coal",
+      gas_share_energy = "Gas",
+      hydro_share_energy = "Hydro",
+      nuclear_share_energy = "Nuclear",
+      oil_share_energy = "Oil"),
+    ncol = 1, scales = "fixed")) +
+  labs(
+    title = "Energy Source Share for Different Income Countries",
+    subtitle = "Lower-Middle, Upper-Middle, and High Income Countries",
+    x = "Energy Source",
+    y = "Share of Energy (%)",
+    color = "Income Group",
+    caption = "Source: Our World in Data, Energy Data Explorer, via TidyTuesday"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    strip.text = element_text(face = "bold", size = 11),
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    plot.subtitle = element_text(size = 11, hjust = 0.5),
+    legend.position = "bottom"
+  )
+```
   
