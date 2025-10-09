@@ -1,7 +1,11 @@
 ---
 title: "index.qmd"
 format: html
-editor: Miguel Villa and Drew Ambrogi
+author: "Miguel Villa and Drew Ambrogi"
+execute:
+  warning: false
+  message: false
+  error: false
 ---
 
 ## Opening Dataset
@@ -10,7 +14,7 @@ From the Tidy Tuesday Series: Energy, Our World in Data.
 
 ```{r}
 # Opening Dataset
-install.packages("tidytuesdayR")
+#install.packages("tidytuesdayR")
 owid_energy <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-06/owid-energy.csv')
 library(tidyverse)
 library(ggplot2)
